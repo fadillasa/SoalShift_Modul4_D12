@@ -229,6 +229,7 @@ static int xmp_rename(const char *from, const char *to)
 		
 		sprintf(fr,"%s%s",dirpath,from);
 		sprintf(ft,"%s/simpanan%s",dirpath,to);
+		strcat(ft,".copy");
 		printf("%s\n",ft);
 		printf("%s\n",fr);
 		res = rename(fr, ft);
@@ -406,6 +407,8 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
 			system(temp);
 		}
 		// ---- no2 end----
+	} else if (strstr(fpath,".copy")){
+		system("zenity --error --text=\"File yang anda buka adalah file hasil salinan. File tidak bisa diubah maupun disalin kembali!\"");
 		return -1;
 	} else {	
 		(void) fi;
