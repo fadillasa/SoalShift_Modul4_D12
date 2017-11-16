@@ -21,8 +21,8 @@
 #include <sys/xattr.h>
 #endif
 
-static const char *dirpath = "/home/frandita/Documents";
-//static const char *dirpath = "/home/frandita/Downloads";
+//static const char *dirpath = "/home/frandita/Documents";
+static const char *dirpath = "/home/frandita/Downloads";
 
 static int xmp_getattr(const char *path, struct stat *stbuf)
 {
@@ -212,15 +212,11 @@ static int xmp_symlink(const char *from, const char *to)
 static int xmp_rename(const char *from, const char *to)
 {
 	int res;
-	char fr[] = {""},ft[] = {""};
-	strcat(fr,dirpath);
-	strcat(fr,from);
-	strcat(ft,dirpath);
-	strcat(ft,to);
 
 	if (strstr(dirpath,"Downloads")>0){
-		sprintf(ft,"%s/simpanan%s",dirpath,to);
-		printf("%s\n",ft);
+		char fr[1000],ft[1000];
+		
+		
 
 		char c[] = {""};
 		sprintf(c,"%s/simpanan",dirpath);
@@ -230,10 +226,14 @@ static int xmp_rename(const char *from, const char *to)
 			sprintf(s,"mkdir %s/simpanan",dirpath);
 			system(s);
 		}
+		
+		sprintf(fr,"%s%s",dirpath,from);
+		sprintf(ft,"%s/simpanan%s",dirpath,to);
+		printf("%s\n",ft);
 		printf("%s\n",fr);
 		res = rename(fr, ft);
 	}
-	else res = rename(fr, ft);
+	else res = rename(from, to);
 	if (res == -1)
 		return -errno;
 
@@ -244,8 +244,10 @@ static int xmp_rename(const char *from, const char *to)
 static int xmp_link(const char *from, const char *to)
 {
 	int res;
-
-	res = link(from, to);
+	char fr[1000],ft[1000];
+	sprintf(fr,"%s%s",dirpath,from);
+	sprintf(ft,"%s%s",dirpath,to);
+	res = link(fr, ft);
 	if (res == -1)
 		return -errno;
 
